@@ -2,15 +2,17 @@
   (:require [quil.core :as q :include-macros true]
             [quil.middleware :as m]
             [cells.game.automata :as automata]
+            [cells.game.day-and-night :as day-and-night]
+            [cells.game.game-of-life :as game-of-life]
             [cells.game.grid :as grid]))
 
 (defn grid [{:keys [grid size]}]
   (doseq [r (range (:rows grid))
           c (range (:cols grid))]
-    (q/stroke 133)
+    (q/stroke 255)
     (if (grid/get-cell grid r c)
       (q/fill 0)
-      (q/fill 133))
+      (q/fill 255))
     (q/rect (* size c) (* size r) size size)))
 
 (defn game [host panel-size g]

@@ -17,11 +17,7 @@
          new-db ((if (fn? value) update-in assoc-in) db path value)]
      (reset-simulation-with (assoc cofx :db new-db)))))
 
-(re-frame/reg-fx
- :restart-simulation
- (fn [config]
-   (println (js/JSON.stringify (clj->js config)))
-   (game/run config)))
+(re-frame/reg-fx :restart-simulation game/run)
 
 (re-frame/reg-event-fx
  ::initialize-db
@@ -36,7 +32,7 @@
 (re-frame/reg-event-fx
  ::change-simulation-game
  (fn [cofx [_event game]]
-   (reset-simulation-with cofx [:simulation :current :game] game)))
+   (reset-simulation-with cofx [:simulation :current :game] (keyword game))))
 
 (re-frame/reg-event-fx
  ::change-simulation-density
@@ -49,7 +45,7 @@
 (re-frame/reg-event-fx
  ::change-grid-type
  (fn [cofx [_event type]]
-   (reset-simulation-with cofx [:simulation :current :grid] type)))
+   (reset-simulation-with cofx [:simulation :current :grid] (keyword type))))
 
 (re-frame/reg-event-fx
  ::change-grid-rows
@@ -86,7 +82,15 @@
 (re-frame/reg-event-fx
  ::change-cell-size
  (fn [cofx [_event size]]
-   (reset-simulation-with cofx [:cells :cell-size]
+   (reset-simulation-with cofx [:cells :size]
                           (if (string? size)
                             (js/parseInt size)
                             size))))
+
+(re-frame/reg-event-fx
+ ::change-frame-rate
+ (fn [cofx [_event fps]]
+   (reset-simulation-with cofx [:cells :frame-rate]
+                          (if (string? fps)
+                            (js/parseInt fps)
+                            fps))))

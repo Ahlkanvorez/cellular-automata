@@ -30,7 +30,7 @@
        [:td (current :density)]]
       [:tr
        [:td "Cell Size"]
-       [:td (str (panel :cell-size) "x" (panel :cell-size) " pixels")]]]]))
+       [:td (str (panel :size) "x" (panel :size) " pixels")]]]]))
 
 (defn cells-panel []
   (let [host @(re-frame/subscribe [::subs/host])]
@@ -117,8 +117,13 @@
 
 (defn cell-size-input []
   (let [current @(re-frame/subscribe [::subs/cells-panel])]
-    [numeric-input "Cell Size" (current :cell-size) "1" "50" "1"
-      ::events/change-cell-size]))
+    [numeric-input "Cell Size" (current :size) "1" "50" "1"
+     ::events/change-cell-size]))
+
+(defn cell-fps-input []
+  (let [current @(re-frame/subscribe [::subs/cells-panel])]
+    [numeric-input "Frame rate" (current :frame-rate) "1" "200" "1"
+     ::events/change-frame-rate]))
 
 (defn simulation-panel []
   [:div {:class "container-fluid"}
@@ -146,7 +151,9 @@
        [panel-size-input]]]
      [:div {:class "row"}
       [:div {:class "col-sm"}
-       [cell-size-input]]]
+       [cell-size-input]]
+      [:div {:class "col-sm"}
+       [cell-fps-input]]]
      [:div {:class "row"}
       [:div {:class "col-sm"}
        [simulation-info-panel]]]]]])
