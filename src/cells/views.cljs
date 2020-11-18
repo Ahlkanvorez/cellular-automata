@@ -160,6 +160,14 @@
 
 (defn main-panel []
   (let [name @(re-frame/subscribe [::subs/name])]
-    [:div
-     [:h1 {:class "display-4"} name]
-     [simulation-panel]]))
+    [:div {:class :container-fluid}
+     [:div {:class :row}
+      [:div {:class :col-sm}
+       [:h1 {:class :display-4} name]]]
+     [:div {:class :row}
+      [:div {:class :col-sm}
+       [:a {:class :lead
+            :href "https://bitbucket.org/ahlk/cellular-automata/src/master/"}
+        "View the Source Code"]]]
+     [:div {:class :row}
+      [simulation-panel]]]))
