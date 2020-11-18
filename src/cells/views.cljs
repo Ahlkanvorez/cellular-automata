@@ -11,31 +11,35 @@
     [:table {:class "table table-sm table-striped"}
      [:tbody
       [:tr
-       [:td "Simulation:"]
+       [:td "Simulation"]
        [:td simulation-count]]
       [:tr
-       [:td "Type:"]
-       [:td (-> current :type name (clojure.string/replace #"-" " "))]]
+       [:td "Game"]
+       [:td (-> current :game name (clojure.string/replace #"-" " "))]]
       [:tr
-       [:td "Grid model:"]
+       [:td "Grid model"]
        [:td (-> current :grid name)]]
       [:tr
-       [:td "(rows, cols)"]
-       [:td (str "(" (current :rows) ", " (current :cols) ")")]]
+       [:td "Grid size"]
+       [:td (str (current :rows) " by " (current :cols))]]
       [:tr
-       [:td "Density:"]
+       [:td "Grid resolution"]
+       [:td (str (panel-size :width) "x" (panel-size :height) " pixels")]]
+      [:tr
+       [:td "Density"]
        [:td (current :density)]]
       [:tr
-       [:td "(Width, Height)"]
-       [:td (str "(" (panel-size :width) ", " (panel-size :height) ")")]]
-      [:tr
        [:td "Cell Size"]
-       [:td (panel :cell-size)]]]]))
+       [:td (str (panel :cell-size) "x" (panel :cell-size) " pixels")]]]]))
 
 (defn cells-panel []
-  [:div {:style {:width (str @(re-frame/subscribe [::subs/cells-panel-width]) "px")
-                 :height (str @(re-frame/subscribe [::subs/cells-panel-height]) "px")
-                 :border "1px solid black"}}])
+  (let [host @(re-frame/subscribe [::subs/host])]
+    [:div
+     {:id host
+      :style
+      {:width (str (+ 2 @(re-frame/subscribe [::subs/cells-panel-width])) "px")
+       :height (str (+ 2 @(re-frame/subscribe [::subs/cells-panel-height])) "px")
+       :border "1px solid black"}}]))
 
 (defn simulation-reset-button []
   [:button {:class "btn btn-primary btn-block"
@@ -60,11 +64,11 @@
         [:option {:value option :key idx}
          (-> option name (clojure.string/replace #"-" " "))])]]))
 
-(defn simulation-type-selector []
-  (let [simulation-types @(re-frame/subscribe [::subs/simulation-types])
-        current-type (:type @(re-frame/subscribe [::subs/current-simulation]))]
-    [selector "Simulation Type" current-type simulation-types
-     ::events/change-simulation-type]))
+(defn simulation-game-selector []
+  (let [simulation-games @(re-frame/subscribe [::subs/simulation-games])
+        current-game (:game @(re-frame/subscribe [::subs/current-simulation]))]
+    [selector "Simulated Game" current-game simulation-games
+     ::events/change-simulation-game]))
 
 (defn grid-type-selector []
   (let [grid-types @(re-frame/subscribe [::subs/grid-types])
@@ -127,7 +131,7 @@
        [simulation-reset-button]]]
      [:div {:class "row"}
       [:div {:class "col-sm"}
-       [simulation-type-selector]]]
+       [simulation-game-selector]]]
      [:div {:class "row"}
       [:div {:class "col-sm"}
        [grid-type-selector]]]

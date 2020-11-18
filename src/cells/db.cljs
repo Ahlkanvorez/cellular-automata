@@ -2,10 +2,11 @@
 
 (def default-db
   {:name "Cellular Automata"
+   :host "cellular-automata"
    :grid-types #{:matrix :flat :map}
    :simulation {:count 1
-                :types #{:game-of-life :day-and-night}
-                :current {:type :game-of-life
+                :games #{:game-of-life :day-and-night}
+                :current {:game :game-of-life
                           :grid :matrix
                           :rows 16
                           :cols 16
