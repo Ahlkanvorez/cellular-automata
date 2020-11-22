@@ -10,7 +10,6 @@
 (defmethod make :matrix [{:keys [rows cols density]}]
   {:cells (transform {:type :matrix :rows rows :cols cols}
                      (fn [[_ r c]] (< (rand) density)))
-   :coords (util/combinations-of (range rows) (range cols))
    :rows rows
    :cols cols
    :type :matrix})
