@@ -6,15 +6,20 @@
   (-> (grid :cells) (nth r nil) (nth c nil)))
 
 (defmethod transform :atom-matrix [grid f]
+  ;; ClojureScript does not have a ref type as Clojure does for
+  ;; coordinating changes between multiple vars. So, changes to atoms
+  ;; are collected in the changes atom, then applied all at once, to
+  ;; prevent changes to cells early on in the transform from affecting
+  ;; changes later on in the same transform.
   (let [changes (atom [])]
     (dotimes [r (:rows grid)]
       (dotimes [c (:cols grid)]
         (when-let [cell (get-cell-atom grid r c)]
           (let [result (f [grid r c])]
             (when-not (= result @cell)
-              (swap! changes conj [r c result]))))))
-    (doseq [[r c v] @changes]
-      (reset! (get-cell-atom grid r c) v)))
+              (swap! changes conj [cell result]))))))
+    (doseq [[cell v] @changes]
+      (reset! cell v)))
   (grid :cells))
 
 (defmethod make :atom-matrix [{:keys [rows cols density]}]
