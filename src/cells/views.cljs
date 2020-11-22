@@ -123,7 +123,9 @@
     [:div {:class :container-fluid}
      (row [:h1 {:class :display-4} name])
      (row [:a {:class :lead
-               :href "https://bitbucket.org/ahlk/cellular-automata/src/master/"}
+               :href "https://bitbucket.org/ahlk/cellular-automata/src/master/"
+               :target "_blank"
+               :rel "noreferrer noopener"}
            "View the Source Code"])
      [:div {:class :row}
       [simulation-panel]]]))
