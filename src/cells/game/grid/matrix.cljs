@@ -4,7 +4,7 @@
 
 (defmethod transform :matrix [grid f]
   (vec (for [r (range (:rows grid))]
-         (vec (for [c (range (:rows grid))]
+         (vec (for [c (range (:cols grid))]
                 (f [grid r c]))))))
 
 (defmethod make :matrix [{:keys [rows cols density]}]
