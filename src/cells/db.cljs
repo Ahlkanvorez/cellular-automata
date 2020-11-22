@@ -3,7 +3,7 @@
 (def default-db
   {:name "Cellular Automata"
    :host "cellular-automata"
-   :grid-types #{:matrix :flat :map :blinker :gosper-glider-gun :tumbler}
+   :grid-types #{:atom-matrix :matrix :flat :map :blinker :gosper-glider-gun :tumbler}
    :simulation {:count 1
                 :games #{:game-of-life :day-and-night}
                 :current {:game :game-of-life

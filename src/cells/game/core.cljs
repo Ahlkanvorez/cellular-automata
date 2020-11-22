@@ -1,6 +1,7 @@
 (ns cells.game.core
   (:require [cells.game.draw :as draw]
             [cells.game.grid :as grid]
+            [cells.game.grid.atom-matrix]
             [cells.game.grid.blinker]
             [cells.game.grid.flat]
             [cells.game.grid.gosper-glider-gun]
