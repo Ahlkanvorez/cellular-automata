@@ -9,9 +9,7 @@
 (re-frame/reg-sub ::cells-panel-height (comp :height :panel-size :cells))
 
 (re-frame/reg-sub ::simulation-count (comp :count :simulation))
-
 (re-frame/reg-sub ::simulation-games (comp :games :simulation))
-
 (re-frame/reg-sub ::current-simulation (comp :current :simulation))
 
 (re-frame/reg-sub ::grid-types :grid-types)
