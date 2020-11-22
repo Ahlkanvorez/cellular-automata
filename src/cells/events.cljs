@@ -1,4 +1,5 @@
 (ns cells.events
+  (:require-macros [cells.macros :refer [reg-config-event]])
   (:require [re-frame.core :as re-frame]
             [cells.db :as db]
             [cells.game.core :as game]))
@@ -17,80 +18,36 @@
          new-db ((if (fn? value) update-in assoc-in) db path value)]
      (reset-simulation-with (assoc cofx :db new-db)))))
 
+(defn as-f [convert should-convert? s]
+  (if (should-convert? s) (convert s) s))
+
+(def as-int (partial as-f js/parseInt string?))
+(def as-float (partial as-f js/parseFloat string?))
+
 (re-frame/reg-fx :restart-simulation game/run)
 
 (re-frame/reg-event-fx
  ::initialize-db
- (fn [cofx _]
-   (reset-simulation-with (assoc cofx :db db/default-db))))
+ (fn [cofx _] (reset-simulation-with (assoc cofx :db db/default-db))))
 
 (re-frame/reg-event-fx
  ::reset
- (fn [cofx _]
-   (reset-simulation-with cofx [:simulation :count] inc)))
+ (fn [cofx _] (reset-simulation-with cofx [:simulation :count] inc)))
 
-(re-frame/reg-event-fx
- ::change-simulation-game
- (fn [cofx [_event game]]
-   (reset-simulation-with cofx [:simulation :current :game] (keyword game))))
+(reg-config-event ::change-game [:simulation :current :game] keyword)
 
-(re-frame/reg-event-fx
- ::change-simulation-density
- (fn [cofx [_event density]]
-   (reset-simulation-with cofx [:simulation :current :density]
-                          (if (string? density)
-                            (js/parseFloat density)
-                            density))))
+(reg-config-event ::change-density [:simulation :current :density] as-float)
 
-(re-frame/reg-event-fx
- ::change-grid-type
- (fn [cofx [_event type]]
-   (reset-simulation-with cofx [:simulation :current :grid] (keyword type))))
+(reg-config-event ::change-grid-type [:simulation :current :grid] keyword)
 
-(re-frame/reg-event-fx
- ::change-grid-rows
- (fn [cofx [_event rows]]
-   (reset-simulation-with cofx [:simulation :current :rows]
-                          (if (string? rows)
-                            (js/parseInt rows)
-                            rows))))
+(reg-config-event ::change-grid-rows [:simulation :current :rows] as-int)
 
-(re-frame/reg-event-fx
- ::change-grid-cols
- (fn [cofx [_event cols]]
-   (reset-simulation-with cofx [:simulation :current :cols]
-                          (if (string? cols)
-                            (js/parseInt cols)
-                            cols))))
+(reg-config-event ::change-grid-cols [:simulation :current :cols] as-int)
 
-(re-frame/reg-event-fx
- ::change-panel-width
- (fn [cofx [_event width]]
-   (reset-simulation-with cofx [:cells :panel-size :width]
-                          (if (string? width)
-                            (js/parseInt width)
-                            width))))
+(reg-config-event ::change-panel-width [:cells :panel-size :width] as-int)
 
-(re-frame/reg-event-fx
- ::change-panel-height
- (fn [cofx [_event height]]
-   (reset-simulation-with cofx [:cells :panel-size :height]
-                          (if (string? height)
-                            (js/parseInt height)
-                            height))))
+(reg-config-event ::change-panel-height [:cells :panel-size :height] as-int)
 
-(re-frame/reg-event-fx
- ::change-cell-size
- (fn [cofx [_event size]]
-   (reset-simulation-with cofx [:cells :size]
-                          (if (string? size)
-                            (js/parseInt size)
-                            size))))
+(reg-config-event ::change-cell-size [:cells :size] as-int)
 
-(re-frame/reg-event-fx
- ::change-frame-rate
- (fn [cofx [_event fps]]
-   (reset-simulation-with cofx [:cells :frame-rate]
-                          (if (string? fps)
-                            (js/parseInt fps)
-                            fps))))
+(reg-config-event ::change-frame-rate [:cells :frame-rate] as-int)
