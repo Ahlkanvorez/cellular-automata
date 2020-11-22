@@ -12,18 +12,8 @@
   {:type game
    :frame-rate frame-rate
    :size size
-   :grid (grid/make {:type grid
-                     :rows rows
-                     :cols cols
-                     :density density})})
+   :grid (grid/make {:type grid :rows rows :cols cols :density density})})
 
-(defn ^:export run [{:keys [host game rows cols grid density size panel-size frame-rate]}]
-  (draw/game host
-             panel-size
-             (make-game {:game game
-                         :rows rows
-                         :cols cols
-                         :grid grid
-                         :density density
-                         :size size
-                         :frame-rate frame-rate})))
+
+(defn ^:export run [config]
+  (draw/game (:host config) (:panel-size config) (make-game config)))
