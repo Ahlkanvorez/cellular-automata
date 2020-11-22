@@ -1,4 +1,5 @@
 (ns cells.views
+  (:require-macros [cells.bootstrap :refer [row tr prepended-input]])
   (:require [re-frame.core :as re-frame]
             [cells.subs :as subs]
             [cells.events :as events]))
@@ -10,27 +11,13 @@
         panel-size (panel :panel-size)]
     [:table {:class "table table-sm table-striped"}
      [:tbody
-      [:tr
-       [:td "Simulation"]
-       [:td simulation-count]]
-      [:tr
-       [:td "Game"]
-       [:td (-> current :game name (clojure.string/replace #"-" " "))]]
-      [:tr
-       [:td "Grid model"]
-       [:td (-> current :grid name)]]
-      [:tr
-       [:td "Grid size"]
-       [:td (str (current :rows) " by " (current :cols))]]
-      [:tr
-       [:td "Grid resolution"]
-       [:td (str (panel-size :width) "x" (panel-size :height) " pixels")]]
-      [:tr
-       [:td "Density"]
-       [:td (current :density)]]
-      [:tr
-       [:td "Cell Size"]
-       [:td (str (panel :size) "x" (panel :size) " pixels")]]]]))
+      (tr "Simulation" simulation-count)
+      (tr "Game" (-> current :game name (clojure.string/replace #"-" " ")))
+      (tr "Grid Model" (-> current :grid name))
+      (tr "Grid Size" (str (current :rows) " by " (current :cols)))
+      (tr "Grid Resolution" (str (panel-size :width) "x" (panel-size :height) " pixels"))
+      (tr "Density" (current :density))
+      (tr "Cell Size" (str (panel :size) "x" (panel :size) " pixels"))]]))
 
 (defn cells-panel []
   (let [host @(re-frame/subscribe [::subs/host])]
@@ -49,9 +36,8 @@
 
 (defn selector [label default options event]
   (let [id (clojure.string/replace label #" " "-")]
-    [:div {:class "input-group mb-3"}
-     [:div {:class "input-group-prepend"}
-      [:label {:class "input-group-text" :for id} label]]
+    (prepended-input
+     label
      [:select {:class "custom-select"
                :id id
                :name id
@@ -62,7 +48,7 @@
                  (re-frame/dispatch [event (.. e -target -value)]))}
       (for [[option idx] (map vector options (range))]
         [:option {:value option :key idx}
-         (-> option name (clojure.string/replace #"-" " "))])]]))
+         (-> option name (clojure.string/replace #"-" " "))])])))
 
 (defn simulation-game-selector []
   (let [simulation-games @(re-frame/subscribe [::subs/simulation-games])
@@ -77,9 +63,8 @@
      ::events/change-grid-type]))
 
 (defn numeric-input [label value min max step event]
-  [:div {:class "input-group mb-3"}
-   [:div {:class "input-group-prepend"}
-    [:span {:class "input-group-text"} label]]
+  (prepended-input
+   label
    [:input {:class "form-control"
             :type :number
             :value value
@@ -89,16 +74,13 @@
             :on-change (fn [e]
                          (.preventDefault e)
                          (re-frame/dispatch
-                          [event (.. e -target -value)]))}]])
+                          [event (.. e -target -value)]))}]))
 
 (defn grid-size-input []
   (let [[rows cols] ((juxt :rows :cols)
                      @(re-frame/subscribe [::subs/current-simulation]))]
-    [:div {:class "row"}
-     [:div {:class "col-sm"}
-      [numeric-input "Rows" rows "2" "100" "1" ::events/change-grid-rows]]
-     [:div {:class "col-sm"}
-      [numeric-input "Cols" cols "2" "100" "1" ::events/change-grid-cols]]]))
+    (row [numeric-input "Rows" rows "2" "100" "1" ::events/change-grid-rows]
+         [numeric-input "Cols" cols "2" "100" "1" ::events/change-grid-cols])))
 
 (defn simulation-density-input []
   (let [current @(re-frame/subscribe [::subs/current-simulation])]
@@ -107,13 +89,10 @@
 
 (defn panel-size-input []
   (let [current (:panel-size @(re-frame/subscribe [::subs/cells-panel]))]
-    [:div {:class "row"}
-     [:div {:class "col-sm"}
-      [numeric-input "Panel Width" (current :width) "100" "2000" "1"
-       ::events/change-panel-width]]
-     [:div {:class "col-sm"}
-      [numeric-input "Panel Height" (current :height) "100" "2000" "1"
-      ::events/change-panel-height]]]))
+    (row [numeric-input "Panel Width" (current :width) "100" "2000" "1"
+          ::events/change-panel-width]
+         [numeric-input "Panel Height" (current :height) "100" "2000" "1"
+          ::events/change-panel-height])))
 
 (defn cell-size-input []
   (let [current @(re-frame/subscribe [::subs/cells-panel])]
@@ -131,43 +110,22 @@
     [:div {:class "col-md mb-3"}
      [cells-panel]]
     [:div {:class "col-md"}
-     [:div {:class "row"}
-      [:div {:class "col-sm mb-3"}
-       [simulation-reset-button]]]
-     [:div {:class "row"}
-      [:div {:class "col-sm"}
-       [simulation-game-selector]]]
-     [:div {:class "row"}
-      [:div {:class "col-sm"}
-       [grid-type-selector]]]
-     [:div {:class "row"}
-      [:div {:class "col-sm"}
-       [grid-size-input]]]
-     [:div {:class "row"}
-      [:div {:class "col-sm"}
-       [simulation-density-input]]]
-     [:div {:class "row"}
-      [:div {:class "col-sm"}
-       [panel-size-input]]]
-     [:div {:class "row"}
-      [:div {:class "col-sm"}
-       [cell-size-input]]
-      [:div {:class "col-sm"}
-       [cell-fps-input]]]
-     [:div {:class "row"}
-      [:div {:class "col-sm"}
-       [simulation-info-panel]]]]]])
+     (row [simulation-reset-button])
+     (row [simulation-game-selector])
+     (row [grid-type-selector])
+     (row [grid-size-input])
+     (row [simulation-density-input])
+     (row [panel-size-input])
+     (row [cell-size-input]
+          [cell-fps-input])
+     (row [simulation-info-panel])]]])
 
 (defn main-panel []
   (let [name @(re-frame/subscribe [::subs/name])]
     [:div {:class :container-fluid}
-     [:div {:class :row}
-      [:div {:class :col-sm}
-       [:h1 {:class :display-4} name]]]
-     [:div {:class :row}
-      [:div {:class :col-sm}
-       [:a {:class :lead
-            :href "https://bitbucket.org/ahlk/cellular-automata/src/master/"}
-        "View the Source Code"]]]
+     (row [:h1 {:class :display-4} name])
+     (row [:a {:class :lead
+               :href "https://bitbucket.org/ahlk/cellular-automata/src/master/"}
+           "View the Source Code"])
      [:div {:class :row}
       [simulation-panel]]]))
