@@ -1,13 +1,16 @@
 # Cellular Automata
 
-A configurable webapp simulation of Conway's Game of Life, and the
-Day & Night variant.
-There are multiple implementations of the internal
-data structures, with the option to switch between them at runtime to
-explore differences in performance.
+A configurable webapp simulating Conway's Game of Life, and the
+Day & Night variation.
+
+This started as a weekend project to explore cellular automata. There
+are multiple implementations of the internal data structures, with the
+option to switch between them at runtime, since I found it interesting
+to see how a few simple backends performed.
+
 The webapp is written in ClojureScript, using Quil for graphics, and
-Re-Frame, Reagent, & ReactJS for the UI.
-Deployments are to AWS S3, using CloudFront.
+Re-Frame, Reagent, & ReactJS for the UI. Deployments are to AWS S3,
+using CloudFront.
 
 ## Usage
 
