@@ -1,5 +1,6 @@
-(ns cells.bootstrap)
+(ns cells.macros)
 
+;; View macros
 (defmacro row [& body]
   `[:div {:class :row}
     ~@(map (fn [c] [:div {:class :col-sm} c])
@@ -14,3 +15,9 @@
      [:label {:class "input-group-text"} ~label]]
     ~input])
 
+;; Event macros
+(defmacro reg-config-event [id keys f]
+  `(re-frame/reg-event-fx
+      ~id
+      (fn [cofx# [event# config#]]
+        (~'reset-simulation-with cofx# ~keys (~f config#)))))

@@ -1,5 +1,5 @@
 (ns cells.views
-  (:require-macros [cells.bootstrap :refer [row tr prepended-input]])
+  (:require-macros [cells.macros :refer [row tr prepended-input]])
   (:require [re-frame.core :as re-frame]
             [cells.subs :as subs]
             [cells.events :as events]))
@@ -53,14 +53,12 @@
 (defn simulation-game-selector []
   (let [simulation-games @(re-frame/subscribe [::subs/simulation-games])
         current-game (:game @(re-frame/subscribe [::subs/current-simulation]))]
-    [selector "Simulated Game" current-game simulation-games
-     ::events/change-simulation-game]))
+    [selector "Simulated Game" current-game simulation-games ::events/change-game]))
 
 (defn grid-type-selector []
   (let [grid-types @(re-frame/subscribe [::subs/grid-types])
         current-type (:grid @(re-frame/subscribe [::subs/current-simulation]))]
-    [selector "Grid Type" current-type grid-types
-     ::events/change-grid-type]))
+    [selector "Grid Type" current-type grid-types ::events/change-grid-type]))
 
 (defn numeric-input [label value min max step event]
   (prepended-input
@@ -85,7 +83,7 @@
 (defn simulation-density-input []
   (let [current @(re-frame/subscribe [::subs/current-simulation])]
     [numeric-input "Density" (current :density) "0.0" "1.0" "0.1"
-     ::events/change-simulation-density]))
+     ::events/change-density]))
 
 (defn panel-size-input []
   (let [current (:panel-size @(re-frame/subscribe [::subs/cells-panel]))]
