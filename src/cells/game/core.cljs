@@ -15,6 +15,5 @@
    :size size
    :grid (grid/make {:type grid :rows rows :cols cols :density density})})
 
-
 (defn ^:export run [config]
   (draw/game (:host config) (:panel-size config) (make-game config)))
