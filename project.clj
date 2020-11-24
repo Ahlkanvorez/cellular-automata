@@ -1,8 +1,8 @@
-(defproject cells "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+(defproject cells "1.0.0"
+  :description "A configurable webapp simulating Conway's Game of Life, and the Day & Night variation."
+  :url "https://cellular-automata.robertm.io"
+  :license {:name "BSD 3-Clause License"
+            :url "https://choosealicense.com/licenses/bsd-3-clause/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]
                  [quil "3.1.0"]
