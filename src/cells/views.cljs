@@ -29,7 +29,7 @@
        :border "1px solid black"}}]))
 
 (defn simulation-reset-button []
-  [:button {:class "btn btn-primary btn-block"
+  [:button {:class "btn btn-primary btn-block mt-3 mb-3"
             :type :button
             :on-click #(re-frame/dispatch [::events/reset])}
    "New Simulation"])
@@ -102,21 +102,22 @@
     [numeric-input "Frame rate" (current :frame-rate) "1" "200" "1"
      ::events/change-frame-rate]))
 
+(defn simulation-config-panel []
+  [:div
+   (row [simulation-reset-button])
+   (row [simulation-game-selector])
+   (row [grid-type-selector])
+   (row [grid-size-input])
+   (row [simulation-density-input])
+   (row [panel-size-input])
+   (row [cell-size-input]
+        [cell-fps-input])])
+
 (defn simulation-panel []
   [:div {:class "container-fluid"}
-   [:div {:class "row"}
-    [:div {:class "col-md mb-3"}
-     [cells-panel]]
-    [:div {:class "col-md"}
-     (row [simulation-reset-button])
-     (row [simulation-game-selector])
-     (row [grid-type-selector])
-     (row [grid-size-input])
-     (row [simulation-density-input])
-     (row [panel-size-input])
-     (row [cell-size-input]
-          [cell-fps-input])
-     (row [simulation-info-panel])]]])
+   (row [cells-panel])
+   (row [simulation-config-panel])
+   (row [simulation-info-panel])])
 
 (defn main-panel []
   (let [name @(re-frame/subscribe [::subs/name])]
