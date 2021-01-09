@@ -14,17 +14,11 @@ using CloudFront.
 
 ## Usage
 
-The project setup assumes you have [Leiningen](https://leiningen.org/)
-installed:
+The project uses the clojure cli tools, and requires npm be installed:
 
-- Run `lein figwheel` in your terminal.
-- Wait for a while until you see `Successfully compiled "resources/public/js/main.js"`.
-- Open [localhost:3449](http://localhost:3449) in your browser.
-
-## Deployment
-
-The deployment pipeline in `bitbucket-pipelines.yml` produces an
-optimized build to deploy to S3 via `lein do clean, cljsbuild once optimized`.
+- Run `npm install && clj -M:dev watch app` in your terminal.
+- Wait for a while until you see `[:app] Build completed. ...`
+- Open [localhost:8080](http://localhost:8080) in your browser.
 
 ## License
 

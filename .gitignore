@@ -5,6 +5,7 @@ pom.xml
 pom.xml.asc
 *.jar
 *.class
-/.lein-*
-/.nrepl-port
-figwheel_server.log
+.cpcache/
+.shadow-cljs/
+node_modules/
+resources/public/js/
